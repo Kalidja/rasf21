@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Загрузка файла{% endblock %}
+
+{% block content %}
+<h2>Загрузить JSON файл</h2>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js"></script>
+
+<style>
+    .dz-message {
+        font-size: 20px;
+        color: #555;
+    }
+</style>
+
+<form action="/upload/" 
+      class="dropzone" 
+      id="jsonDropzone"
+      enctype="multipart/form-data">
+    {% csrf_token %}
+</form>
+<script>
+Dropzone.autoDiscover = false;
+
+const dz = new Dropzone("#jsonDropzone", {
+    maxFiles: 1,
+    acceptedFiles: ".json",
+    dictDefaultMessage: "Перетащите JSON файл сюда или нажмите",
+    init: function () {
+        this.on("addedfile", function (file) {
+
+            if (file.name.length >= 50) {
+                alert("Имя файла должно быть короче 50 символов");
+                this.removeFile(file);
+                return;
+            }
+
+            if (!file.name.toLowerCase().endsWith(".json")) {
+                alert("Можно загружать только JSON файлы");
+                this.removeFile(file);
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+
+                    if (!("name" in data)) {
+                        alert("Отсутствует обязательный ключ: 'name'");
+                        dz.removeFile(file);
+                        return;
+                    }
+
+                    if (!("date" in data)) {
+                        alert("Отсутствует обязательный ключ: 'date'");
+                        dz.removeFile(file);
+                        return;
+                    }
+
+                    const dateRegex = /^\d{4}-\d{2}-\d{2}_\d{2}:\d{2}$/;
+
+                    if (!dateRegex.test(data.date)) {
+                        alert("Поле 'date' должно быть в формате YYYY-MM-DD_HH:mm");
+                        dz.removeFile(file);
+                        return;
+                    }
+
+
+                } catch (err) {
+                    alert("Некорректный JSON файл");
+                    dz.removeFile(file);
+                }
+            };
+
+            reader.readAsText(file);
+        });
+    }
+});
+</script>
+
+{% endblock %}

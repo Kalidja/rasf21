@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Мой проект{% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .menu {
+            margin-bottom: 20px;
+        }
+        .menu a {
+            display: inline-block;
+            padding: 10px 15px;
+            margin-right: 10px;
+            background: #4a90e2;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .menu a:hover {
+            background: #357ab8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="menu">
+    <a href="/upload/">Загрузить файл</a>
+    <a href="/files/">Все загруженные файлы</a>
+</div>
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>
+

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Все файлы{% endblock %}
+
+{% block content %}
+<h2>Все загруженные записи</h2>
+
+<link rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+<table id="filesTable" class="display" style="width:100%">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Имя</th>
+            <th>Дата</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for f in files %}
+        <tr>
+            <td>{{ f.id }}</td>
+            <td>{{ f.name }}</td>
+            <td>{{ f.date }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#filesTable').DataTable({
+        "pageLength": 10,
+        "order": [[2, "desc"]],
+        "language": {
+            "url": "https://cdn.datatables.net/plug-ins/1.13.6/i18n/ru.json"
+        }
+    });
+});
+</script>
+
+{% endblock %}
